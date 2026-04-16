@@ -2,14 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-
 #define SIZE 101
 
-int lenCheck(char password[]);
-int UpLowCaseCheck(char password[]);
-int numberCheck(char password[]);
-int specialCharacterCheck(char password[]);
-char *getResult(int a, int b, int c, int d);
+char *analyzePassword(char *password);
 
 int main(void) {
     char *password = malloc(SIZE);
@@ -46,74 +41,60 @@ int main(void) {
         return EXIT_FAILURE;
     }
     password[strcspn(password, "\n")] = '\0';
-    int lenResult = lenCheck(password);
-    int upLowCaseResult = UpLowCaseCheck(password);
-    int numberResult = numberCheck(password);
-    int specialCharacterResult = specialCharacterCheck(password);
-    char *finalResult = getResult(lenResult, upLowCaseResult, numberResult, specialCharacterResult);
-    printf("%s\n", finalResult);
+    char *result = analyzePassword(password);
+    printf("%s\n", result);
     free(password);
     return EXIT_SUCCESS;
 }
 
-int lenCheck(char password[]) {
-    int len = strlen(password);
-
-    if (len < 8){
-        return 0;
-    }
-
-    return 1;
-}
-
-int UpLowCaseCheck(char password[]) {
-    int hasLower = 0;
+char *analyzePassword(char *password) {
+    int len = 0;
     int hasUpper = 0;
+    int hasLower = 0;
+    int hasUpLow = 0;
+    int hasDigit = 0;
+    int hasSpecialCharacter = 0;
+    int pointResult = 0;
 
-    for (int i = 0; password[i] != '\0'; i++) {
+    if(password)
+
+    for (int i = 0; password[i] != '\0'; i++){
+        if(!isspace(password[i])) {
+            len++;
+        }
+
         if(islower(password[i])) {
             hasLower = 1;
         }
-
+        
         if(isupper(password[i])) {
             hasUpper = 1;
         }
 
-        if (hasLower && hasUpper) {
-            return 1;
+        if(isdigit(password[i])) {
+            hasDigit = 1;
+        }
+
+        if(ispunct(password[i])) {
+            hasSpecialCharacter = 1;
         }
     }
-    return 0;
-}
 
-
-int numberCheck(char password[]) {
-    for (int i = 0; password[i] != '\0'; i++) {
-        if (isdigit(password[i])) {
-                return 1;
-            }
+    if(hasUpper && hasLower) {
+        hasUpLow = 1;
     }
-    return 0;
-}
 
-int specialCharacterCheck(char password[]) {
-    for (int i = 0; password[i] != '\0'; i++) {
-        if (ispunct(password[i])) {
-            return 1;
-        }
+    if(len < 8) {
+        return "Too short!";
     }
-    return 0;
-}
 
-char *getResult(int a, int b, int c, int d) {
-    int pointResult = a + b + c + d;
-
-    if (pointResult <= 2) {
+    pointResult = hasUpLow + hasDigit + hasSpecialCharacter;
+    if (pointResult <= 1) {
         return "Weak password";
-    } else if (pointResult == 3) {
+    } else if (pointResult == 2) {
         return "Medium password";
-    } else if (pointResult == 4) {
+    } else if (pointResult == 3) {
         return "Strong password";
     }
     return "Something went wrong";
-}
+};
