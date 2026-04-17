@@ -24,7 +24,7 @@ int main(void){
 
     analyzeFile(fileName);
     free(fileName);
-    return EXIT_SUCCESS
+    return EXIT_SUCCESS;
 }
 
 int analyzeFile(char *fileName) {
