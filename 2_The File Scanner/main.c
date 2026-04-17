@@ -4,6 +4,7 @@
 #define SIZE 101
 
 int analyzeFile(char *fileName);
+
 int main(void){
     char *fileName = malloc(SIZE);
 
@@ -23,6 +24,7 @@ int main(void){
 
     analyzeFile(fileName);
     free(fileName);
+    return EXIT_SUCCESS
 }
 
 int analyzeFile(char *fileName) {
