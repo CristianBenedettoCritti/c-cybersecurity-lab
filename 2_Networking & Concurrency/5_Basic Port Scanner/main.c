@@ -84,6 +84,11 @@ int socketScan(char *theTarget, int startPort, int endPort) {
 
     // Converting the string into a format the network card understands (32-bit integer (in network byte order))
     target.sin_addr.s_addr = inet_addr(theTarget);
+    if(target.sin_addr.s_addr == INADDR_NONE) {
+        printf("Error: Invalid IP address format!");
+        WSACleanup();
+        return 1;
+    }
     system("cls");
     printf("IP: %s\nPort: %d - %d", theTarget, startPort, endPort);
     printf("\nOpen Ports:");
